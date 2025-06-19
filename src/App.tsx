@@ -1,30 +1,19 @@
-import type { AxiosRequestConfig } from 'axios';
-import { useAxios } from './hooks/useAxios';
+import { useState } from 'react';
+import { withLoaded } from './hocs/withLoading';
 
-interface Post {
-  id: number;
-  title: string;
-  body: string;
-  userId: number;
-}
+const MyComponent: React.FC = () => <div>Hello world</div>;
 
-const config: AxiosRequestConfig = {
-  method: 'get',
-  url: 'https://jsonplaceholder.typicode.com/posts',
-};
+const WithLoadedComponent = withLoaded(MyComponent);
 
 function App() {
-  const { data, error, loading } = useAxios<Post[]>(config);
+  const [loading, setLoading] = useState(false);
 
-  if (error && typeof error === 'string') {
-    return <div>{error}</div>;
-  }
-
-  if (loading) {
-    return <div>Loading</div>;
-  }
-
-  return <div>{data?.map((item) => item.title)}</div>;
+  return (
+    <>
+      <button onClick={() => setLoading((prev) => !prev)}>Change Loading</button>
+      <WithLoadedComponent isLoaded={loading} />
+    </>
+  );
 }
 
 export default App;
